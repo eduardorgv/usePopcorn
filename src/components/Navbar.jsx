@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-export const Navbar = () => {
+export const Navbar = ({ movies }) => {
   return (
     <nav className="nav-bar">
       <Logo />
       <Search />
-      <NumResults />
+      <NumResults movies={movies} />
     </nav>
   );
 };
@@ -33,10 +33,10 @@ const Search = () => {
   );
 }
 
-const NumResults = () => {
+const NumResults = ({ movies }) => {
   return (
     <p className="num-results">
-      Found <strong>x</strong> results
+      Found <strong>{movies.length}</strong> results
     </p>
   );
 };

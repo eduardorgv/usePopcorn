@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { tempMovieData } from "../data/initialData";
 
-export const ListBox = () => {
+export const ListBox = ({ movies }) => {
   const [isOpen1, setIsOpen1] = useState(true);
 
   return (
@@ -12,14 +11,12 @@ export const ListBox = () => {
       >
         {isOpen1 ? "–" : "+"}
       </button>
-      {isOpen1 && <MovieList />}
+      {isOpen1 && <MovieList movies={movies} />}
     </div>
   );
 };
 
-const MovieList = () => {
-  const [movies, setMovies] = useState(tempMovieData);
-
+const MovieList = ({ movies }) => {
   return (
     <ul className="list">
       {movies?.map((movie) => (
