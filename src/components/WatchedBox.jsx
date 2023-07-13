@@ -1,28 +1,18 @@
 import { useState } from "react";
 import { tempWatchedData } from "../data/initialData";
+import { Box } from "./Box";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export const WatchedBox = () => {
-  const [isOpen2, setIsOpen2] = useState(true);
   const [watched, setWatched] = useState(tempWatchedData);
 
   return (
-    <div className="box">
-      <button
-        className="btn-toggle"
-        onClick={() => setIsOpen2((open) => !open)}
-      >
-        {isOpen2 ? "–" : "+"}
-      </button>
-      {isOpen2 && (
-        <>
-          <WatchedSummary watched={watched} />
-          <WatchedMoviesList watched={watched} />
-        </>
-      )}
-    </div>
+    <Box>
+      <WatchedSummary watched={watched} />
+      <WatchedMoviesList watched={watched} />
+    </Box>
   );
 };
 
