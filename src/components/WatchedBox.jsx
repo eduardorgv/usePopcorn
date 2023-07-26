@@ -7,16 +7,32 @@ const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export const WatchedBox = ({ selectedId, onCloseMovie }) => {
-  const [watched, setWatched] = useState(tempWatchedData);
+  const [watched, setWatched] = useState([]);
+
+  const handleAddWatched = (movie) => {
+    setWatched([...watched, movie])
+  }
+
+  const handleDeleteWatched = (id) => {
+    setWatched((watched) => watched.filter((movie) => movie.imdbID !== id))
+  }
 
   return (
     <Box>
       {selectedId ? (
-        <MovieDetails selectedId={selectedId} onCloseMovie={onCloseMovie} />
+        <MovieDetails 
+          watched={watched}
+          selectedId={selectedId} 
+          onCloseMovie={onCloseMovie} 
+          onAddWatched={handleAddWatched}
+        />
       ) : (
         <>
           <WatchedSummary watched={watched} />
-          <WatchedMoviesList watched={watched} />
+          <WatchedMoviesList 
+            watched={watched}
+            onDeleteWatched={handleDeleteWatched}
+          />
         </>
       )}
     </Box>
@@ -38,36 +54,40 @@ const WatchedSummary = ({ watched }) => {
         </p>
         <p>
           <span>⭐️</span>
-          <span>{avgImdbRating}</span>
+          <span>{avgImdbRating.toFixed(2)}</span>
         </p>
         <p>
           <span>🌟</span>
-          <span>{avgUserRating}</span>
+          <span>{avgUserRating.toFixed(2)}</span>
         </p>
         <p>
           <span>⏳</span>
-          <span>{avgRuntime} min</span>
+          <span>{avgRuntime.toFixed(2)} min</span>
         </p>
       </div>
     </div>
   );
 };
 
-const WatchedMoviesList = ({ watched }) => {
+const WatchedMoviesList = ({ watched, onDeleteWatched }) => {
   return (
     <ul className="list">
     {watched.map((movie) => (
-      <WatchedMovie key={movie.imdbID} movie={movie} />
+      <WatchedMovie 
+        key={movie.imdbID} 
+        movie={movie} 
+        onDeleteWatched={onDeleteWatched}
+      />
     ))}
   </ul>
   )
 }
 
-const WatchedMovie = ({ movie }) => {
+const WatchedMovie = ({ movie, onDeleteWatched }) => {
   return (
     <li>
-    <img src={movie.Poster} alt={`${movie.Title} poster`} />
-    <h3>{movie.Title}</h3>
+    <img src={movie.poster} alt={`${movie.title} poster`} />
+    <h3>{movie.title}</h3>
     <div>
       <p>
         <span>⭐️</span>
@@ -81,6 +101,8 @@ const WatchedMovie = ({ movie }) => {
         <span>⏳</span>
         <span>{movie.runtime} min</span>
       </p>
+
+      <button className="btn-delete" onClick={() => onDeleteWatched(movie.imdbID)}>X</button>
     </div>
   </li>
   )
