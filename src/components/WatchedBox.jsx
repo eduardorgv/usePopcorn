@@ -1,17 +1,24 @@
 import { useState } from "react";
 import { tempWatchedData } from "../data/initialData";
 import { Box } from "./Box";
+import { MovieDetails } from "./MovieDetails";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
-export const WatchedBox = () => {
+export const WatchedBox = ({ selectedId, onCloseMovie }) => {
   const [watched, setWatched] = useState(tempWatchedData);
 
   return (
     <Box>
-      <WatchedSummary watched={watched} />
-      <WatchedMoviesList watched={watched} />
+      {selectedId ? (
+        <MovieDetails selectedId={selectedId} onCloseMovie={onCloseMovie} />
+      ) : (
+        <>
+          <WatchedSummary watched={watched} />
+          <WatchedMoviesList watched={watched} />
+        </>
+      )}
     </Box>
   );
 };
