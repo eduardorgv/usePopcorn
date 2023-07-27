@@ -33,6 +33,29 @@ export const MovieDetails = ({
   } = movie;
 
   useEffect(() => {
+    if (!title) return;
+    document.title = `MOVIE ${title}`;
+
+    return () => {
+      document.title = "UsePopcorn";
+    };
+  }, [title]);
+
+  useEffect(() => {
+    const callback = (e) => {
+      if (e.code === "Escape") {
+        onCloseMovie();
+      }
+    };
+
+    document.addEventListener("keydown", callback);
+
+    return () => {
+      document.removeEventListener("keydown", callback);
+    };
+  }, [onCloseMovie]);
+
+  useEffect(() => {
     async function getMovieDetails() {
       try {
         setIsLoading(true);

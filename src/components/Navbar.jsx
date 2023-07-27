@@ -13,8 +13,9 @@ export const Navbar = ({ movies, query, setQuery }) => {
 const Logo = () => {
   return (
     <div className="logo">
-      <span role="img">🍿</span>
-      <h1>usePopcorn</h1>
+      {/* <span role="img">🍿</span> */}
+      <img src="../../public/icon.png" alt="UsePopcorn logo" height={40} width={40} />
+      <h1>UsePopcorn</h1>
     </div>
   );
 };
