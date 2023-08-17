@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
-import { StarRating } from "../movie/StarRating";
 import { Loader } from "./Loader";
-
-const KEY = "a4d93804";
+import { StarRating } from "./starRating/StarRating";
+import { useEffect, useRef, useState } from "react";
+import { useKey } from "../hooks/useKey";
+import { useMovieSelected } from "../hooks/useMovieSelected"
+import { useTitle } from "../hooks/useTitle";
 
 export const MovieDetails = ({
   selectedId,
@@ -13,6 +14,7 @@ export const MovieDetails = ({
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState("");
+  const countRef = useRef(0);
 
   const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
   const watchedUserRating = watched.find(
@@ -32,46 +34,16 @@ export const MovieDetails = ({
     Genre: genre,
   } = movie;
 
-  useEffect(() => {
-    if (!title) return;
-    document.title = `MOVIE ${title}`;
-
-    return () => {
-      document.title = "UsePopcorn";
-    };
-  }, [title]);
+  useKey('Escape', onCloseMovie);
+  useTitle(title);
+  useMovieSelected(selectedId, setIsLoading, setMovie);
 
   useEffect(() => {
-    const callback = (e) => {
-      if (e.code === "Escape") {
-        onCloseMovie();
-      }
-    };
-
-    document.addEventListener("keydown", callback);
-
-    return () => {
-      document.removeEventListener("keydown", callback);
-    };
-  }, [onCloseMovie]);
-
-  useEffect(() => {
-    async function getMovieDetails() {
-      try {
-        setIsLoading(true);
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
-        );
-        const data = await res.json();
-        setMovie(data);
-      } catch (error) {
-        console.error(error.message);
-      } finally {
-        setIsLoading(false);
-      }
+    function updateCountRef() {
+      if(userRating) countRef.current++;
     }
-    getMovieDetails();
-  }, [selectedId]);
+    updateCountRef();
+  }, [userRating])
 
   const handleAdd = () => {
     const newWatchedMovie = {
@@ -82,6 +54,7 @@ export const MovieDetails = ({
       imdbRating: Number(imdbRating),
       runtime: Number(runtime.split(" ").at(0)),
       userRating,
+      countRatingDecisions: countRef.current
     };
     onAddWatched(newWatchedMovie);
     onCloseMovie();

@@ -1,18 +1,17 @@
-import { useState } from "react";
-import { tempWatchedData } from "../data/initialData";
 import { Box } from "./Box";
 import { MovieDetails } from "./MovieDetails";
+import { useLocalStorageState } from "../hooks/useLocalStorageState";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export const WatchedBox = ({ selectedId, onCloseMovie }) => {
-  const [watched, setWatched] = useState([]);
+  const [watched, setWatched] = useLocalStorageState([], "watched");
 
   const handleAddWatched = (movie) => {
     setWatched([...watched, movie])
   }
-
+  
   const handleDeleteWatched = (id) => {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id))
   }

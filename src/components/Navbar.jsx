@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useRef } from "react";
+import { useKey } from "../hooks/useKey";
 
 export const Navbar = ({ movies, query, setQuery }) => {
   return (
@@ -14,13 +15,21 @@ const Logo = () => {
   return (
     <div className="logo">
       {/* <span role="img">🍿</span> */}
-      <img src="../../public/icon.png" alt="UsePopcorn logo" height={40} width={40} />
+      <img src="/icon.png" alt="UsePopcorn logo" height={40} width={40} />
       <h1>UsePopcorn</h1>
     </div>
   );
 };
 
 const Search = ({ query, setQuery }) => {
+  const inputEl = useRef(null);
+
+  useKey('Enter', function () {
+    if(document.activeElement === inputEl.current) return;
+    inputEl.current?.focus();
+    setQuery("");
+  })
+
   return (
     <input
       className="search"
@@ -28,6 +37,7 @@ const Search = ({ query, setQuery }) => {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => setQuery(e.target.value)}
+      ref={inputEl}
     />
   );
 }
